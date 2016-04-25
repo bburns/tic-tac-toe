@@ -1,6 +1,16 @@
 
 import React from 'react';
 
+export default class App extends React.Component {
+  render() {
+    return (
+      <div id="content">
+            <Board />
+      </div>
+    );
+  }
+}
+
 
 class Board extends React.Component {
     
@@ -30,7 +40,6 @@ class Board extends React.Component {
     }
     
     componentWillUnmount() {
-        // window.removeEventListener('resize', this.handleResize.bind(this));
         window.removeEventListener('resize', this.updateCanvas.bind(this));
         const canvas = this.refs.canvas;
         canvas.removeEventListener('click', this.handleClick.bind(this));
@@ -104,12 +113,3 @@ class Board extends React.Component {
 }
 
 
-export default class App extends React.Component {
-  render() {
-    return (
-      <div id="content">
-            <Board />
-      </div>
-    );
-  }
-}
