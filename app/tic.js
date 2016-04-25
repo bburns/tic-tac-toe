@@ -57,6 +57,25 @@ tic.getScore = function(board) {
 };
 
 
+// * getMoves
+
+// get list of available moves
+// each move is an object with {i,j}
+// function getMoves(board) {
+tic.getMoves = function(board) {
+    var moves = [];
+    for (var i=0; i<3; i++) {
+        for (var j=0; j<3; j++) {
+            if (board[i][j]===0) {
+                var move = {i:i, j:j};
+                moves.push(move);
+            }
+        }
+    }
+    return moves;
+};
+
+
 
 
 // * export

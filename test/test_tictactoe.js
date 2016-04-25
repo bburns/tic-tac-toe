@@ -43,6 +43,11 @@ describe('tictactoe', function() {
         tic.getScore(board_xxx).should.equal(X);
         tic.getScore(board_ooo).should.equal(O);
     });
+    it('should get list of available moves', function() {
+        tic.getMoves(board_empty).length.should.equal(9);
+        tic.getMoves(board_xx).length.should.equal(4);
+        tic.getMoves(board_xxx).should.eql([{i:1,j:2},{i:2,j:0}]);
+    });
 });
 
 
