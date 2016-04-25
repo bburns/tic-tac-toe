@@ -3,42 +3,42 @@ import React from 'react';
 
 
 class Board extends React.Component {
+    
     constructor() {
         super();
-    //     const w = window.innerWidth - 2;
-    //     const h = window.innerHeight - 2;
-    //     const wh = Math.min(w, h) * 0.8;
-    //     var state = {};
-    //     state.wh = wh;
-    //     this.state = state;
         var state = {};
         // state.board = [[0,0,0],[0,0,0],[0,0,0]];
         state.board = [[0,1,0],[0,-1,0],[1,0,0]];
         this.state = state;
     }
+    
     componentDidMount() {
         this.updateCanvas();
-        // window.addEventListener('resize', this.handleResize.bind(this));
         window.addEventListener('resize', this.updateCanvas.bind(this));
+        const canvas = this.refs.canvas;
+        canvas.addEventListener('click', this.handleClick.bind(this));
     }
-    // handleResize() {
-    //     // this.updateCanvas();
-    //     var state = this.state;
-    //     const w = window.innerWidth - 2;
-    //     const h = window.innerHeight - 2;
-    //     const wh = Math.min(w, h) * 0.8;
-    //     state.wh = wh;
-    //     this.setState(state);
-    // }
+    
+    handleClick(evt) {
+        const canvas = this.refs.canvas;
+        var x = evt.pageX - canvas.offsetLeft;
+        var y = evt.pageY - canvas.offsetTop;
+        const third = canvas.width / 3;
+        const i = (x<third) ? 0 : (x<third+third) ? 1 : 2;
+        const j = (y<third) ? 0 : (y<third+third) ? 1 : 2;
+        alert(i + ' ' + j);
+    }
+    
     componentWillUnmount() {
         // window.removeEventListener('resize', this.handleResize.bind(this));
         window.removeEventListener('resize', this.updateCanvas.bind(this));
+        const canvas = this.refs.canvas;
+        canvas.removeEventListener('click', this.handleClick.bind(this));
     }
+    
     updateCanvas() {
         
         const gridColor = "gray";
-        
-        const ctx = this.refs.canvas.getContext('2d');
         
         const w = window.innerWidth - 2;
         const h = window.innerHeight - 2;
@@ -50,6 +50,7 @@ class Board extends React.Component {
         canvas.width = wh;
         canvas.height = wh;
         
+        const ctx = this.refs.canvas.getContext('2d');
         ctx.translate(0.5, 0.5); // so lines look better
         
         // draw grid
