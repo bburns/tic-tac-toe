@@ -1,0 +1,48 @@
+
+// test tictactoe
+// note: to run the tests in this file, must run mocha on cmdline,
+// can't just run it from node.
+
+var chai = require('chai');
+var should = chai.should();
+
+var tic = require('../app/tic');
+
+var X=1;
+var O=-1;
+var _=0;
+var playerUser = X;
+var playerCpu = O;
+
+var board_empty =
+    [[_,_,_],
+     [_,_,_],
+     [_,_,_]];
+var board_xxx =
+    [[X,O,X],
+     [O,X,_],
+     [_,O,X]];
+var board_ooo =
+    [[X,O,X],
+     [O,X,X],
+     [O,O,O]];
+var board_oo =
+    [[X,O,_],
+     [O,O,_],
+     [X,X,_]];
+var board_xx =
+    [[_,_,O],
+     [_,X,X],
+     [X,_,O]];
+
+describe('tictactoe', function() {
+    it('should calculate score correctly', function() {
+        tic.getScore(board_empty).should.equal(0);
+        tic.getScore(board_xx).should.equal(0);
+        tic.getScore(board_oo).should.equal(0);
+        tic.getScore(board_xxx).should.equal(X);
+        tic.getScore(board_ooo).should.equal(O);
+    });
+});
+
+
