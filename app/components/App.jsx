@@ -36,13 +36,29 @@ class Board extends React.Component {
         const w = window.innerWidth - 2;
         const h = window.innerHeight - 2;
         const wh = Math.min(w, h) * 0.8;
+        const third = wh/3;
         canvas.width = wh;
         canvas.height = wh;
         ctx.translate(0.5, 0.5); // so lines look better
         ctx.beginPath();
-        ctx.moveTo(0,0);
-        ctx.lineTo(wh, wh);
-        ctx.rect(0,0,wh,wh);
+        
+        // ctx.rect(0,0,wh,wh);
+        
+        // ctx.moveTo(0,0);
+        // ctx.lineTo(wh, wh);
+        
+        ctx.moveTo(0, third);
+        ctx.lineTo(wh, third);
+        
+        ctx.moveTo(0, third+third);
+        ctx.lineTo(wh, third+third);
+        
+        ctx.moveTo(third, 0);
+        ctx.lineTo(third, wh);
+        
+        ctx.moveTo(third+third, 0);
+        ctx.lineTo(third+third, wh);
+        
         ctx.stroke();
     }
     render() {
