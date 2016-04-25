@@ -38,11 +38,11 @@ tic.getScore = function(board) {
     for (var i=0; i<3; i++) {
         for (var j=0; j<3; j++) {
             // check columns
-            xwin[i] *= (board[i][j]===1); 
-            ywin[i] *= (board[i][j]===-1); 
+            xwin[i] *= (board[i][j]===1);
+            ywin[i] *= (board[i][j]===-1);
             // check rows
-            xwin[i+3] *= (board[j][i]===1); 
-            ywin[i+3] *= (board[j][i]===-1); 
+            xwin[i+3] *= (board[j][i]===1);
+            ywin[i+3] *= (board[j][i]===-1);
         }
         // check diagonals
         xwin[6] *= (board[i][i]===1);
@@ -83,7 +83,7 @@ tic.getMoves = function(board) {
 tic.getMove = function(board, maximizingPlayer, lookahead) {
     var score = tic.getScore(board) * playerCpu;
     if (lookahead==0 || score !==0) {
-tic.logBoard(board);        
+tic.logBoard(board);
         var move = {i:null, j:null, score: score};
         return move;
     }
@@ -95,7 +95,7 @@ tic.logBoard(board);
             // place our piece
             board[move.i][move.j] = playerCpu;
             // given that move, what's the other player's best move (just assume they take it)
-            var theirMove = tic.getMove(board, false, lookahead - 1); //. -2? 
+            var theirMove = tic.getMove(board, false, lookahead - 1); //. -2?
             board[move.i][move.j] = 0;
             if (theirMove.score > bestMove.score) {
                 move.score = theirMove.score;

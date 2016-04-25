@@ -51,8 +51,8 @@ describe('tictactoe', function() {
     it('should finish oo', function() {
         // tic.getMove(board_oo, true, 0).should.eql({i:null,j:null,score:0});
         // tic.getMove(board_oo, true, 1).should.eql({i:1,j:2,score:O});
-        // tic.getMove(board_oo, true, 1).should.eql({i:1,j:2,score:1}); 
-        tic.getMove2(board_oo, O, 1).should.eql({i:1,j:2,score:1}); 
+        // tic.getMove(board_oo, true, 1).should.eql({i:1,j:2,score:1});
+        tic.getMove2(board_oo, O, 1).should.eql({i:1,j:2,score:1});
     });
     it('should block xx', function() {
         // tic.getMove(board_xx, true, 0).should.eql({i:1,j:0,score:0});
