@@ -1,5 +1,6 @@
 
 // test tictactoe
+
 // note: to run the tests in this file, must run mocha on cmdline,
 // can't just run it from node.
 
@@ -49,16 +50,10 @@ describe('tictactoe', function() {
         tic.getMoves(board_xxx).should.eql([{i:1,j:2},{i:2,j:0}]);
     });
     it('should finish oo', function() {
-        // tic.getMove(board_oo, true, 0).should.eql({i:null,j:null,score:0});
-        // tic.getMove(board_oo, true, 1).should.eql({i:1,j:2,score:O});
-        // tic.getMove(board_oo, true, 1).should.eql({i:1,j:2,score:1});
-        tic.getMove2(board_oo, O, 1).should.eql({i:1,j:2,score:1});
+        tic.getMove(board_oo, O, 1).should.eql({i:1,j:2,score:1});
     });
     it('should block xx', function() {
-        // tic.getMove(board_xx, true, 0).should.eql({i:1,j:0,score:0});
-        // tic.logBoard(board_xx);
-        // tic.getMove2(board_xx, O, 1).should.eql({i:1,j:0,score:0});
-        tic.getMove2(board_xx, O, 2).should.eql({i:1,j:0,score:0});
+        tic.getMove(board_xx, O, 2).should.eql({i:1,j:0,score:0});
     });
 });
 
