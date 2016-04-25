@@ -120,6 +120,43 @@ tic.logBoard(board);
     }
 };
 
+// * getMove2
+
+// negamax algorithm
+tic.getMove2 = function(board, player, lookahead) {
+    var moves = tic.getMoves(board);
+    var score = tic.getScore(board);
+    if (lookahead==0 || score !==0 || moves.length==0) {
+        var move = {i:-1, j:-1, score: score};
+        return move;
+    }
+    var bestMove = {i:null, j:null, score:-9e9};
+    for (var move of moves) {
+        board[move.i][move.j] = player;
+        var nextMove = tic.getMove2(board, -player, lookahead - 1);
+        nextMove.score = nextMove.score * player;
+        if (nextMove.score==0) nextMove.score=0; // -0 -> 0
+        board[move.i][move.j] = 0;
+        if (nextMove.score > bestMove.score) {
+            move.score = nextMove.score;
+            bestMove = move;
+        }
+    }
+    return bestMove;
+};
+
+
+// var board_oo =
+//     [[X,O,_],
+//      [O,O,_],
+//      [X,X,_]];
+// console.log(tic.getMove2(board_oo, O, 2));
+
+// var board_xx =
+//     [[X,O,O],
+//      [_,X,X],
+//      [X,_,O]];
+// console.log(tic.getMove2(board_xx, O, 3));
 
 
 
