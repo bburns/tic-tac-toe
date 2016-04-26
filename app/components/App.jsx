@@ -34,9 +34,12 @@ class Board extends React.Component {
         var x = evt.pageX - canvas.offsetLeft;
         var y = evt.pageY - canvas.offsetTop;
         const third = canvas.width / 3;
-        const i = (x<third) ? 0 : (x<third+third) ? 1 : 2;
-        const j = (y<third) ? 0 : (y<third+third) ? 1 : 2;
-        alert(i + ' ' + j);
+        const j = (x<third) ? 0 : (x<third+third) ? 1 : 2;
+        const i = (y<third) ? 0 : (y<third+third) ? 1 : 2;
+        var state = this.state;
+        state.board[i][j] = 1;
+        this.setState(state);
+        this.updateCanvas();
     }
     
     componentWillUnmount() {
