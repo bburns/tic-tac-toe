@@ -8,34 +8,35 @@ export default class App extends React.Component {
         super();
         var state = {};
         state.showModal = true;
+        // state.showModal = false;
         this.state = state;
     }
     onCloseModal() {
         this.setState({showModal: false});
     }
-    
-  render() {
+
+    render() {
         // onAfterOpen={null}
         // style={{}}
-    return (
-      <div id="content">
-            <Modal
-        isOpen={this.state.showModal}
-        onRequestClose={this.onCloseModal.bind(this)}
-        closeTimeoutMS={0}
-            >
-            <h1>Choose a side</h1>
-            <p>(X goes first)</p>
-            </Modal>
-            <Board />
-      </div>
-    );
-  }
+        return (
+                <div id="content">
+                <Modal
+            isOpen={this.state.showModal}
+            onRequestClose={this.onCloseModal.bind(this)}
+            closeTimeoutMS={0}
+                >
+                <h1>Choose a side</h1>
+                <p>(X goes first)</p>
+                </Modal>
+                <Board />
+                </div>
+        );
+    }
 }
 
 
 class Board extends React.Component {
-    
+
     constructor() {
         super();
         var state = {};
@@ -43,14 +44,14 @@ class Board extends React.Component {
         state.board = [[0,1,0],[0,-1,0],[1,0,0]];
         this.state = state;
     }
-    
+
     componentDidMount() {
         this.updateCanvas();
         window.addEventListener('resize', this.updateCanvas.bind(this));
         const canvas = this.refs.canvas;
         canvas.addEventListener('click', this.handleClick.bind(this));
     }
-    
+
     handleClick(evt) {
         const canvas = this.refs.canvas;
         var x = evt.pageX - canvas.offsetLeft;
@@ -65,30 +66,30 @@ class Board extends React.Component {
         this.logBoard();
     }
 
-    
+
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateCanvas.bind(this));
         const canvas = this.refs.canvas;
         canvas.removeEventListener('click', this.handleClick.bind(this));
     }
-    
+
     updateCanvas() {
-        
+
         const gridColor = "gray";
-        
+
         const w = window.innerWidth - 2;
         const h = window.innerHeight - 2;
         const wh = Math.min(w, h) * 0.8;
         const third = wh/3;
         const sixth = third/2;
-        
+
         const canvas = this.refs.canvas;
         canvas.width = wh;
         canvas.height = wh;
-        
+
         const ctx = this.refs.canvas.getContext('2d');
         ctx.translate(0.5, 0.5); // so lines look better
-        
+
         // draw grid
         ctx.beginPath();
         ctx.lineWidth = 1; //. still too wide, as is 0.1
@@ -98,7 +99,7 @@ class Board extends React.Component {
         ctx.moveTo(third+third, 0); ctx.lineTo(third+third, wh);
         ctx.strokeStyle = gridColor;
         ctx.stroke();
-        
+
         // get letter positions
         const x = [];
         const y = [];
@@ -109,17 +110,17 @@ class Board extends React.Component {
         y[1] = third + sixth + yoffset;
         x[2] = third + third + sixth;
         y[2] = third + third + sixth + yoffset;
-        
+
         const fontSize = third;
         ctx.font = fontSize + "px serif";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        
+
         // draw X's and O's
         // ctx.fillText("X",x[0], y[0]);
         // ctx.fillText("X",x[1], y[0]);
         // ctx.fillText("O",x[1], y[2]);
-        
+
         // draw board state
         const board = this.state.board;
         for (var i=0; i<3; i++) {
@@ -132,10 +133,10 @@ class Board extends React.Component {
             }
         }
     }
-    
+
     render() {
         return (
-            <canvas id="canvas" ref="canvas" width='100%' height='100%'/>
+                <canvas id="canvas" ref="canvas" width='100%' height='100%'/>
         );
     }
 }
