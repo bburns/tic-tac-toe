@@ -11,63 +11,122 @@ export default class App extends React.Component {
     constructor() {
         super();
         var state = {};
-        state.showModal = true;
-        // state.showModal = false;
-        state.playerUser = tic.X;
-        state.playerCpu = - state.playerUser;
-        state.gameState = 0;
-        state.winner = 0;
-        // state.board = [[0,0,0],[0,0,0],[0,0,0]];
+        state.playerUser = null;
+        state.playerCpu = null;
         // state.board = [[0,1,0],[0,-1,0],[1,0,0]];
-        state.board = tic.board_empty;
+        state.board = [[0,0,0],[0,0,0],[0,0,0]];
+        state.lookahead = 3;
+        state.showStart = true;
+        state.showEnd = false;
+        state.score = 0;
+        // state.showStart = false;
+        // state.showEnd = true;
+        // state.score = 1;
+        state.gameState = tic.stateStart;
         this.state = state;
     }
     
-    // onCloseModal() {
-        // this.setState({showModal: false});
-    // }
+    onStart() {
+        var state = {};
+        state.showStart = true;
+        state.showEnd = false;
+        state.gameState = tic.stateStart;
+        this.setState(state);
+console.log(state);        
+    }
     
     onChooseSide(evt) {
         console.log(evt.target.innerHTML);
         var side = evt.target.innerHTML;
         var player = (side=='X') ? tic.X : tic.O;
+        var gameState = (side=='X') ? tic.stateUser : tic.stateCpu;
+        var board = [[0,0,0],[0,0,0],[0,0,0]];
+        
         var state = this.state;
         state.playerUser = player;
         state.playerCpu = - player;
-        state.showModal = false;
+        state.showStart = false; // hide the dialog
+        state.gameState = gameState;
+        state.board = board;
         this.setState(state);
+        this.forceUpdate();
+// alert('forcedupdate');
+        if (gameState==tic.stateCpu) {
+            this.onCpuMove();
+        }
+    }
+
+    onCpuMove() {
+        //. delay 0.5-1secs
+        var move = tic.getMove(this.state.board, this.state.playerCpu, this.state.lookahead);
+        console.log(move);
+        var state = this.state;
+        state.board[move.i][move.j] = this.state.playerCpu;
+        tic.logBoard(state.board);
+        this.setState(state);
+        this.forceUpdate();
+        if (this.checkBoard()) {
+        } else {
+            this.onDone();
+        }
     }
     
-    onClickSquare(i, j) {
+    onChooseSquare(i, j) {
         var state = this.state;
         state.board[i][j] = this.state.playerUser;
         this.setState(state);
-        // this.logBoard();
+        tic.logBoard(state.board);
+        this.forceUpdate();
+        if (this.checkBoard()) {
+            this.onCpuMove();
+        } else {
+            this.onDone();
+        }            
     }
+    
+    checkBoard() {
+        var moves = tic.getMoves(this.state.board);
+        var score = tic.getScore(this.state.board);
+        var cont = !(score!==0 || moves.length==0);
+        var state = this.state;
+        state.score = score;
+        this.setState(state);
+        return cont;
+    }
+    
+    onDone() {
+        //. show line through win
+        var state = this.state;
+        state.gameState = tic.stateDone;
+        state.showEnd = true;
+        var s = "";
+        if (this.state.score==this.state.playerUser)
+            s = "You won!!";
+        else if (this.state.score==this.state.playerCpu)
+            s = "You lost!!";
+        else
+            s = "Draw!";
+        state.endMessage = s;
+        this.setState(state);
+        // delay n secs and goto start
+        setTimeout(this.onStart.bind(this), 2000);
+    }
+    
     
     render() {
         
         var modalStyles = {
-            // background: 'rgba(255,255,255,0.5)'
         };
         
-        var winLoseText = "";
-        if (this.state.winner==this.state.playerUser)
-            winLoseText = "You won!!";
-        else if (this.state.winner==this.state.playerCpu)
-            winLoseText = "You lost!!";
-        
-            // playerUser={this.state.playerUser}
-            // onRequestClose={this.onCloseModal.bind(this)}
         return (
                 <div id="content">
                 
                 <Modal
-            isOpen={this.state.showModal}
+            isOpen={this.state.showStart}
             style={modalStyles}
                 >
-                <div style={{textAlign:'center'}}>
-                <div>{winLoseText}</div><br />
+                <div>
+                <br />
                 <div>Choose a side</div><br />
                 <div>
                 <a href="#" onClick={this.onChooseSide.bind(this)}>X</a>
@@ -78,9 +137,15 @@ export default class App extends React.Component {
                 </div>
                 </Modal>
                 
+                <Modal
+            isOpen={this.state.showEnd}
+                >
+                <div>{this.state.endMessage}</div>
+                </Modal>
+                
                 <Board
             board={this.state.board}
-            onClickSquare={this.onClickSquare.bind(this)}
+            onChooseSquare={this.onChooseSquare.bind(this)}
                 />
                 
                 </div>
@@ -90,12 +155,6 @@ export default class App extends React.Component {
 
 
 class Board extends React.Component {
-
-    constructor() {
-        super();
-        var state = {};
-        this.state = state;
-    }
 
     componentDidMount() {
         this.updateCanvas();
@@ -111,12 +170,8 @@ class Board extends React.Component {
         const third = canvas.width / 3;
         const j = (x<third) ? 0 : (x<third+third) ? 1 : 2;
         const i = (y<third) ? 0 : (y<third+third) ? 1 : 2;
-        this.props.onClickSquare(i, j);
-        // var state = this.state;
-        // state.board[i][j] = this.props.playerUser;
-        // this.setState(state);
+        this.props.onChooseSquare(i, j);
         this.updateCanvas();
-        // this.logBoard();
     }
 
     componentWillUnmount() {
@@ -136,6 +191,9 @@ class Board extends React.Component {
         const sixth = third/2;
 
         const canvas = this.refs.canvas;
+        
+        if (!canvas) return;
+        
         canvas.width = wh;
         canvas.height = wh;
 
@@ -187,7 +245,7 @@ class Board extends React.Component {
     }
 
     render() {
-        // this.updateCanvas();
+        this.updateCanvas();
         return (
                 <canvas id="canvas" ref="canvas" width='100%' height='100%'/>
         );

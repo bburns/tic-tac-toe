@@ -25,39 +25,48 @@
 // });
 
 
-function getChar(prompt, onKey, next) {
+
+function askSide(next) {
     var stdin = process.stdin;
     stdin.setRawMode(true); // else would only get lines
     stdin.resume();
     stdin.setEncoding('utf8');
-    process.stdout.write(prompt); // no linefeed
+    process.stdout.write('x/o: '); // no linefeed
     stdin.on('data', function(key) {
         if (key === '\u0003') { // ctrl+c
             process.exit();
         }
-        // process.stdout.write(key);
-        if (onKey(key))
-            next();
+        process.stdout.write(key);
+        next(key);
+        process.exit();
     });
 }
 
-getChar('Choose side, x or o: ', onKey, foo);
+// var onKey = function(key) {
+//     console.log(key);
+//     var side = 0;
+//     if (key=='x')
+//         side = 1;
+//     else if (key=='o')
+//         side = -1;
+//     else return false;
+//     return true;
+// };
 
-var onKey = function(key) {
-    console.log(key);
-    var side = 0;
-    if (key=='x')
-        side = 1;
-    else if (key=='o')
-        side = -1;
-    else return false;
-    return true;
+// var askSide = function(next) {
+//     getChar('Choose side, x or o: ', onKey, next);
+// };
+
+var playGame = function(key) {
+    console.log('playgame as ' + key);
+    process.exit();
 };
 
-var foo = function() {
-    
-}
+// getChar('x/o:');
+// getChar('x/o:', process.exit);
+askSide(playGame);
 
+// askSide(playGame);
 
 // var tic = require('../app/code/tic');
 // var game = new tic.Game();

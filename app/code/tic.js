@@ -10,13 +10,15 @@ tic.X=1;
 tic.O=-1;
 
 // game states
-tic.stateStart = 0;
-tic.statePlay = 1;
-tic.stateDone = 2;
+tic.stateStart = 0; // wait for user to choose x or o
+tic.stateUser = 1; // user's turn
+tic.stateCpu = 2; // computer's turn
+tic.stateDone = 3;
 
+tic.statePlay = 9; // for playAgainstSelf()
 
 var _=0;
-tic.board_empty =
+tic.boardEmpty =
     [[_,_,_],
      [_,_,_],
      [_,_,_]];
@@ -91,7 +93,7 @@ tic.getMove = function(board, player, lookahead) {
     var moves = tic.getMoves(board);
     var score = tic.getScore(board);
     if (lookahead==0 || score !==0 || moves.length==0) {
-        var move = {i:-1, j:-1, score: score};
+        var move = {i:null, j:null, score: score};
         return move;
     }
     var bestMove = {i:null, j:null, score:-9e9};
@@ -109,6 +111,7 @@ tic.getMove = function(board, player, lookahead) {
     return bestMove;
 };
 
+var X = tic.X, O = tic.O, _ = 0;
 
 // var board_oo =
 //     [[X,O,_],
@@ -122,13 +125,19 @@ tic.getMove = function(board, player, lookahead) {
 //      [X,_,O]];
 // console.log(tic.getMove(board_xx, O, 3));
 
+var board_xx =
+    [[X,O,O],
+     [O,X,X],
+     [X,_,O]];
+console.log(tic.getMove(board_xx, O, 3));
+
 
 // * run
 
 // play a game against itself
 
 tic.playAgainstSelf = function() {
-    var board = tic.board_empty;
+    var board = tic.boardEmpty;
     var score = 0;
     var gameState = tic.stateStart;
     var playerUser = tic.X;
@@ -151,50 +160,47 @@ tic.playAgainstSelf = function() {
 
 // * game
 
-
-class Game {
+// class Game {
     
-    constructor() {
-        this.askSide = null;
-        this.askMove = null;
-    }
+//     constructor() {
+//         this.askSide = null;
+//         this.askMove = null;
+//     }
 
-    play() {
-        this.board = tic.board_empty;
-        this.score = 0;
-        this.gameState = tic.stateStart;
-        // var playerUser = tic.X;
-        this.askSide(function(playerUser) {
-            this.playerUser = playerUser;
-            this.playerCpu = -playerUser;
-            this.gameState = tic.statePlay;
-            this.player = tic.X; // x goes first
-            // game loop
-            function loop() {
-                if (this.gameState==tic.statePlay) {
-                    if (this.player==playerUser) {
-                        // logboard;
-                        var move = this.askMove('move?');
-                    } else {
-                        var move = tic.getMove(this.board, this.player, tic.LOOKAHEAD);
-                    }
-                    this.board[move.i][move.j] = this.player;
-                    this.score = tic.getScore(this.board);
-                    var moves = tic.getMoves(this.board);
-                    if (this.score!==0 || moves==0)
-                        this.gameState = tic.stateDone;
-                    this.player = -this.player;
-                    loop();
-                }
-            }
-            loop();
-            tic.logBoard(this.board);
-            tic.play(); // rerun/recurse
-        });
-    };
-
-
-}
+//     play() {
+//         this.board = tic.boardEmpty;
+//         this.score = 0;
+//         this.gameState = tic.stateStart;
+//         // var playerUser = tic.X;
+//         this.askSide(function(playerUser) {
+//             this.playerUser = playerUser;
+//             this.playerCpu = -playerUser;
+//             this.gameState = tic.statePlay;
+//             this.player = tic.X; // x goes first
+//             // game loop
+//             function loop() {
+//                 if (this.gameState==tic.statePlay) {
+//                     if (this.player==playerUser) {
+//                         // logboard;
+//                         var move = this.askMove('move?');
+//                     } else {
+//                         var move = tic.getMove(this.board, this.player, tic.LOOKAHEAD);
+//                     }
+//                     this.board[move.i][move.j] = this.player;
+//                     this.score = tic.getScore(this.board);
+//                     var moves = tic.getMoves(this.board);
+//                     if (this.score!==0 || moves==0)
+//                         this.gameState = tic.stateDone;
+//                     this.player = -this.player;
+//                     loop();
+//                 }
+//             }
+//             loop();
+//             tic.logBoard(this.board);
+//             tic.play(); // rerun/recurse
+//         });
+//     };
+// }
 
 
 
