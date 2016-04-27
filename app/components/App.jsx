@@ -13,6 +13,7 @@ const LOOKAHEAD = 3;
 
 
 export default class App extends React.Component {
+    
     constructor() {
         super();
         var state = {};
@@ -22,11 +23,15 @@ export default class App extends React.Component {
         state.playerCpu = - state.playerUser;
         state.gameState = 0;
         state.winner = 0;
+        // state.board = [[0,0,0],[0,0,0],[0,0,0]];
+        state.board = [[0,1,0],[0,-1,0],[1,0,0]];
         this.state = state;
     }
+    
     // onCloseModal() {
         // this.setState({showModal: false});
     // }
+    
     onChooseSide(evt) {
         console.log(evt.target.innerHTML);
         var side = evt.target.innerHTML;
@@ -39,6 +44,13 @@ export default class App extends React.Component {
         this.setState(state);
     }
     
+    onClickSquare(i, j) {
+        var state = this.state;
+        state.board[i][j] = this.state.playerUser;
+        this.setState(state);
+        // this.logBoard();
+    }
+    
     render() {
         
         var modalStyles = {};
@@ -49,6 +61,7 @@ export default class App extends React.Component {
         else if (this.state.winner==this.state.playerCpu)
             winLoseText = "You lost!!";
         
+            // playerUser={this.state.playerUser}
             // onRequestClose={this.onCloseModal.bind(this)}
         return (
                 <div id="content">
@@ -69,7 +82,11 @@ export default class App extends React.Component {
                 </div>
                 </Modal>
                 
-                <Board playerUser={this.state.playerUser} />
+                <Board
+            board={this.state.board}
+            onClickSquare={this.onClickSquare.bind(this)}
+                />
+                
                 </div>
         );
     }
@@ -81,8 +98,6 @@ class Board extends React.Component {
     constructor() {
         super();
         var state = {};
-        // state.board = [[0,0,0],[0,0,0],[0,0,0]];
-        state.board = [[0,1,0],[0,-1,0],[1,0,0]];
         this.state = state;
     }
 
@@ -100,13 +115,13 @@ class Board extends React.Component {
         const third = canvas.width / 3;
         const j = (x<third) ? 0 : (x<third+third) ? 1 : 2;
         const i = (y<third) ? 0 : (y<third+third) ? 1 : 2;
-        var state = this.state;
-        state.board[i][j] = this.props.playerUser;
-        this.setState(state);
+        this.props.onClickSquare(i, j);
+        // var state = this.state;
+        // state.board[i][j] = this.props.playerUser;
+        // this.setState(state);
         this.updateCanvas();
-        this.logBoard();
+        // this.logBoard();
     }
-
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateCanvas.bind(this));
@@ -163,7 +178,7 @@ class Board extends React.Component {
         // ctx.fillText("O",x[1], y[2]);
 
         // draw board state
-        const board = this.state.board;
+        const board = this.props.board;
         for (var i=0; i<3; i++) {
             for (var j=0; j<3; j++) {
                 const piece = board[i][j];
@@ -176,6 +191,7 @@ class Board extends React.Component {
     }
 
     render() {
+        // this.updateCanvas();
         return (
                 <canvas id="canvas" ref="canvas" width='100%' height='100%'/>
         );
