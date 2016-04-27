@@ -14,9 +14,11 @@
     "testw": "mocha -w"
   },
   "dependencies": {
+    "prompt-sync": "^4.0.4",
     "react": "~0.14.7",
     "react-dom": "~0.14.7",
-    "react-modal": "^1.2.1"
+    "react-modal": "^1.2.1",
+    "readline-sync": "^1.4.1"
   },
   "devDependencies": {
     "auto-reload-brunch": "^2.0.0",

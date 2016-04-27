@@ -17,6 +17,8 @@ h1 {
 
 .ReactModalPortal {
     font-size: 1.25em;
+    /* max-width: 20em; */
+    /* background-color: rgba(255,255,255,0.5) !important; */
 }
 .ReactModalPortal a {
     color: black;
@@ -26,7 +28,15 @@ h1 {
 .ReactModalPortal a:hover {
     color: gray;
 }
-
+.ReactModal__Content {
+    /* background-color: rgba(255,255,255,0.5) !important; */
+    margin: 0 auto;
+    max-width: 10em;
+    top: 50% !important;
+    bottom: auto !important;
+    max-height: 10em;
+    margin-top: -5em;
+}
 
 #canvas {
     position: absolute;

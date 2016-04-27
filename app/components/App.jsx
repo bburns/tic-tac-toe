@@ -2,13 +2,7 @@
 import React from 'react';
 import Modal from 'react-modal';
 
-
-var X=1;
-var O=-1;
-var _=0;
-var playerUser = X;
-var playerCpu = O;
-const LOOKAHEAD = 3;
+import tic from '../code/tic';
 
 
 
@@ -19,12 +13,13 @@ export default class App extends React.Component {
         var state = {};
         state.showModal = true;
         // state.showModal = false;
-        state.playerUser = X;
+        state.playerUser = tic.X;
         state.playerCpu = - state.playerUser;
         state.gameState = 0;
         state.winner = 0;
         // state.board = [[0,0,0],[0,0,0],[0,0,0]];
-        state.board = [[0,1,0],[0,-1,0],[1,0,0]];
+        // state.board = [[0,1,0],[0,-1,0],[1,0,0]];
+        state.board = tic.board_empty;
         this.state = state;
     }
     
@@ -35,8 +30,7 @@ export default class App extends React.Component {
     onChooseSide(evt) {
         console.log(evt.target.innerHTML);
         var side = evt.target.innerHTML;
-// alert('You chose ' + side);
-        var player = (side=='X') ? X : O;
+        var player = (side=='X') ? tic.X : tic.O;
         var state = this.state;
         state.playerUser = player;
         state.playerCpu = - player;
@@ -53,7 +47,9 @@ export default class App extends React.Component {
     
     render() {
         
-        var modalStyles = {};
+        var modalStyles = {
+            // background: 'rgba(255,255,255,0.5)'
+        };
         
         var winLoseText = "";
         if (this.state.winner==this.state.playerUser)
