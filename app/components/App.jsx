@@ -1,10 +1,32 @@
 
 import React from 'react';
+import Modal from 'react-modal';
+
 
 export default class App extends React.Component {
+    constructor() {
+        super();
+        var state = {};
+        state.showModal = true;
+        this.state = state;
+    }
+    onCloseModal() {
+        this.setState({showModal: false});
+    }
+    
   render() {
+        // onAfterOpen={null}
+        // style={{}}
     return (
       <div id="content">
+            <Modal
+        isOpen={this.state.showModal}
+        onRequestClose={this.onCloseModal.bind(this)}
+        closeTimeoutMS={0}
+            >
+            <h1>Choose a side</h1>
+            <p>(X goes first)</p>
+            </Modal>
             <Board />
       </div>
     );
@@ -43,43 +65,6 @@ class Board extends React.Component {
         this.logBoard();
     }
 
-    logBoard() {
-        var s = this.state.board.map(row=>row.join('')).join('\n');
-        s = s.replace(/-1/g,'O');
-        s = s.replace(/1/g,'X');
-        s = s.replace(/0/g,'_');
-        s += '\n';
-        s += this.getScore();
-        // s +='\n';
-        console.log(s);
-    }
-
-    // return score for a board - +1 for + win, -1 for - win
-    getScore() {
-        // there are 8 ways to win for each side - 3 horiz, 3 vert, 2 diagonal
-        var board = this.state.board;
-        var xwin = [1,1,1,1,1,1,1,1];
-        var ywin = [1,1,1,1,1,1,1,1];
-        for (var i=0; i<3; i++) {
-            for (var j=0; j<3; j++) {
-                // check columns
-                xwin[i] *= (board[i][j]===1);
-                ywin[i] *= (board[i][j]===-1);
-                // check rows
-                xwin[i+3] *= (board[j][i]===1);
-                ywin[i+3] *= (board[j][i]===-1);
-            }
-            // check diagonals
-            xwin[6] *= (board[i][i]===1);
-            ywin[6] *= (board[i][i]===-1);
-            xwin[7] *= (board[i][2-i]===1);
-            ywin[7] *= (board[i][2-i]===-1);
-        }
-        var xscore = xwin.reduce((a,b)=>a || b, 0);
-        var yscore = ywin.reduce((a,b)=>a || b, 0);
-        var score = xscore - yscore;
-        return score;
-    }
     
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateCanvas.bind(this));
@@ -106,6 +91,7 @@ class Board extends React.Component {
         
         // draw grid
         ctx.beginPath();
+        ctx.lineWidth = 1; //. still too wide, as is 0.1
         ctx.moveTo(0, third); ctx.lineTo(wh, third);
         ctx.moveTo(0, third+third); ctx.lineTo(wh, third+third);
         ctx.moveTo(third, 0); ctx.lineTo(third, wh);

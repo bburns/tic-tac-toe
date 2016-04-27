@@ -55,6 +55,9 @@ describe('tictactoe', function() {
     it('should block xx', function() {
         tic.getMove(board_xx, O, 2).should.eql({i:1,j:0,score:0});
     });
+    it('should play a game against itself', function() {
+        tic.playAgainstSelf();
+    });
 });
 
 
