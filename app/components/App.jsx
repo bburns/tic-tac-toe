@@ -21,11 +21,12 @@ export default class App extends React.Component {
         state.playerUser = X;
         state.playerCpu = - state.playerUser;
         state.gameState = 0;
+        state.winner = 0;
         this.state = state;
     }
-    onCloseModal() {
-        this.setState({showModal: false});
-    }
+    // onCloseModal() {
+        // this.setState({showModal: false});
+    // }
     onChooseSide(evt) {
         console.log(evt.target.innerHTML);
         var side = evt.target.innerHTML;
@@ -37,24 +38,35 @@ export default class App extends React.Component {
         state.showModal = false;
         this.setState(state);
     }
+    
     render() {
-        // onAfterOpen={null}
-        // style={{}}
+        
         var modalStyles = {};
         
+        var winLoseText = "";
+        if (this.state.winner==this.state.playerUser)
+            winLoseText = "You won!!";
+        else if (this.state.winner==this.state.playerCpu)
+            winLoseText = "You lost!!";
+        
+            // onRequestClose={this.onCloseModal.bind(this)}
         return (
                 <div id="content">
                 
                 <Modal
-            id="choose-side"
             isOpen={this.state.showModal}
-            onRequestClose={this.onCloseModal.bind(this)}
             style={modalStyles}
                 >
-                <h2>Choose a side (X goes first)</h2>
+                <div style={{textAlign:'center'}}>
+                <div>{winLoseText}</div><br />
+                <div>Choose a side</div><br />
+                <div>
                 <a href="#" onClick={this.onChooseSide.bind(this)}>X</a>
                 &nbsp;
                 <a href="#" onClick={this.onChooseSide.bind(this)}>O</a>
+                </div><br />
+                <div>(X goes first)</div><br />
+                </div>
                 </Modal>
                 
                 <Board playerUser={this.state.playerUser} />

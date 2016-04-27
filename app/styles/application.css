@@ -15,6 +15,9 @@ h1 {
 }
 
 
+.ReactModalPortal {
+    font-size: 1.25em;
+}
 .ReactModalPortal a {
     color: black;
     font-size: 2em;
