@@ -7,7 +7,7 @@
 var chai = require('chai');
 var should = chai.should();
 
-var tic = require('../app/tic');
+var tic = require('../app/code/tic');
 
 var X=1;
 var O=-1;
