@@ -3,32 +3,61 @@ import React from 'react';
 import Modal from 'react-modal';
 
 
+var X=1;
+var O=-1;
+var _=0;
+var playerUser = X;
+var playerCpu = O;
+const LOOKAHEAD = 3;
+
+
+
 export default class App extends React.Component {
     constructor() {
         super();
         var state = {};
         state.showModal = true;
         // state.showModal = false;
+        state.playerUser = X;
+        state.playerCpu = - state.playerUser;
+        state.gameState = 0;
         this.state = state;
     }
     onCloseModal() {
         this.setState({showModal: false});
     }
-
+    onChooseSide(evt) {
+        console.log(evt.target.innerHTML);
+        var side = evt.target.innerHTML;
+// alert('You chose ' + side);
+        var player = (side=='X') ? X : O;
+        var state = this.state;
+        state.playerUser = player;
+        state.playerCpu = - player;
+        state.showModal = false;
+        this.setState(state);
+    }
     render() {
         // onAfterOpen={null}
         // style={{}}
+        var modalStyles = {};
+        
         return (
                 <div id="content">
+                
                 <Modal
+            id="choose-side"
             isOpen={this.state.showModal}
             onRequestClose={this.onCloseModal.bind(this)}
-            closeTimeoutMS={0}
+            style={modalStyles}
                 >
-                <h1>Choose a side</h1>
-                <p>(X goes first)</p>
+                <h2>Choose a side (X goes first)</h2>
+                <a href="#" onClick={this.onChooseSide.bind(this)}>X</a>
+                &nbsp;
+                <a href="#" onClick={this.onChooseSide.bind(this)}>O</a>
                 </Modal>
-                <Board />
+                
+                <Board playerUser={this.state.playerUser} />
                 </div>
         );
     }
@@ -60,7 +89,7 @@ class Board extends React.Component {
         const j = (x<third) ? 0 : (x<third+third) ? 1 : 2;
         const i = (y<third) ? 0 : (y<third+third) ? 1 : 2;
         var state = this.state;
-        state.board[i][j] = 1;
+        state.board[i][j] = this.props.playerUser;
         this.setState(state);
         this.updateCanvas();
         this.logBoard();
