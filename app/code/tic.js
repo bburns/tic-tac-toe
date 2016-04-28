@@ -95,9 +95,7 @@ tic.getMoves = function(board) {
 // get best move for given board and player
 // this is the negamax algorithm
 tic.getMove = function(board, player, lookahead) {
-// tic.log(board, 3-lookahead);
     var moves = tic.getMoves(board);
-    // var score = tic.getScore(board);
     var score = tic.getScore(board) * player;
     if (lookahead==0 || score !==0 || moves.length==0) {
         var move = {i:null, j:null, score: score};
@@ -106,26 +104,19 @@ tic.getMove = function(board, player, lookahead) {
     var bestMove = {i:null, j:null, score:-9e9};
     for (var move of moves) {
         board[move.i][move.j] = player; // place piece
-tic.log(board,3-lookahead);        
-// tic.log(board,lookahead);
         var nextMove = tic.getMove(board, -player, lookahead - 1);
-        // nextMove.score = nextMove.score * player;
         nextMove.score = - nextMove.score;
         if (nextMove.score==0) nextMove.score=0; // -0 -> 0, for chai assert
-// nextMove.player=player;        
-// console.log('nextmove', nextMove);
         board[move.i][move.j] = 0; // remove piece
         if (nextMove.score > bestMove.score) {
             move.score = nextMove.score;
             bestMove = move;
-// bestMove.player=player;            
         }
     }
-console.log('bestmove',bestMove);    
     return bestMove;
 };
 
-var X = tic.X, O = tic.O, _ = 0;
+// var X = tic.X, O = tic.O, _ = 0;
 
 // var boardOO =
 //     [[X,O,_],
@@ -145,11 +136,11 @@ var X = tic.X, O = tic.O, _ = 0;
 //      [X,_,O]];
 // console.log(tic.getMove(boardXX, O, 3));
 
-var board =
-    [[O,_,2],
-     [_,X,X],
-     [_,2,2]];
-console.log(tic.getMove(board, O, 3));
+// var board =
+//     [[O,_,2],
+//      [_,X,X],
+//      [_,2,2]];
+// console.log(tic.getMove(board, O, 3));
 // console.log(tic.getMove(board, O, 2));
 
 // * run
@@ -221,9 +212,6 @@ tic.playAgainstSelf = function() {
 //         });
 //     };
 // }
-
-
-
 
 
 // * export

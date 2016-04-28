@@ -14,9 +14,7 @@ export default class App extends React.Component {
         state.playerUser = null;
         state.playerCpu = null;
         state.board = [[0,0,0],[0,0,0],[0,0,0]];
-        // state.board = [[-1,0,2],[0,1,0],[0,2,2]];
         state.lookahead = 3;
-        // state.lookahead = 2;
         state.showStart = true;
         state.showEnd = false;
         state.score = 0;
@@ -44,7 +42,6 @@ console.log(state);
         var player = (side=='X') ? tic.X : tic.O;
         var gameState = (side=='X') ? tic.stateUser : tic.stateCpu;
         var board = [[0,0,0],[0,0,0],[0,0,0]];
-        // var board = [[-1,0,2],[0,1,0],[0,2,2]];
         
         var state = this.state;
         state.playerUser = player;
@@ -54,7 +51,6 @@ console.log(state);
         state.board = board;
         this.setState(state);
         this.forceUpdate();
-// alert('forcedupdate');
         if (gameState==tic.stateCpu) {
             setTimeout(this.onCpuMove.bind(this), this.state.delayCpu);
         }
