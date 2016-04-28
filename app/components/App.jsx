@@ -74,15 +74,19 @@ console.log(state);
     
     onChooseSquare(i, j) {
         var state = this.state;
-        state.board[i][j] = this.state.playerUser;
-        this.setState(state);
-        tic.logBoard(state.board);
-        this.forceUpdate();
-        if (this.checkBoard()) {
-            setTimeout(this.onCpuMove.bind(this), this.state.delayCpu);
-        } else {
-            this.onDone();
-        }            
+            tic.logBoard(state.board);
+        
+        if (state.board[i][j]===0) {
+            state.board[i][j] = this.state.playerUser;
+            this.setState(state);
+            // tic.logBoard(state.board);
+            this.forceUpdate();
+            if (this.checkBoard()) {
+                setTimeout(this.onCpuMove.bind(this), this.state.delayCpu);
+            } else {
+                this.onDone();
+            }            
+        }
     }
     
     checkBoard() {
