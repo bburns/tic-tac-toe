@@ -18,7 +18,8 @@ export default class App extends React.Component {
         state.showStart = true;
         state.showEnd = false;
         state.score = 0;
-        state.delayCpu = 500; // ms
+        state.delayCpu = 250; // ms
+        state.delayLastMove = 1000; // ms
         state.delayEnd = 2000; // ms
         // state.showStart = false;
         // state.showEnd = true;
@@ -33,7 +34,6 @@ export default class App extends React.Component {
         state.showEnd = false;
         state.gameState = tic.stateStart;
         this.setState(state);
-console.log(state);        
     }
     
     onChooseSide(evt) {
@@ -66,7 +66,8 @@ console.log(state);
         this.forceUpdate();
         if (this.checkBoard()) {
         } else {
-            this.onDone();
+            // this.onDone();
+            this.onLastMove();
         }
     }
     
@@ -80,7 +81,8 @@ console.log(state);
             if (this.checkBoard()) {
                 setTimeout(this.onCpuMove.bind(this), this.state.delayCpu);
             } else {
-                this.onDone();
+                // this.onDone();
+                this.onLastMove();
             }            
         }
     }
@@ -95,10 +97,18 @@ console.log(state);
         return cont;
     }
     
-    onDone() {
+    onLastMove() {
         //. show line through win
         var state = this.state;
-        state.gameState = tic.stateDone;
+        state.gameState = tic.stateLastMove;
+        this.setState(state);
+        // delay n secs and goto end
+        setTimeout(this.onEnd.bind(this), this.state.delayLastMove);
+    }
+    
+    onEnd() {
+        var state = this.state;
+        state.gameState = tic.stateEnd;
         state.showEnd = true;
         var s = "";
         if (this.state.score==this.state.playerUser)
@@ -238,7 +248,6 @@ class Board extends React.Component {
             for (var j=0; j<3; j++) {
                 const piece = board[i][j];
                 if (piece!==0) {
-                    // const letter = (piece > 0) ? 'X' : 'O';
                     const letter = (piece==tic.X) ? 'X' : (piece==tic.O) ? 'O' : '-';
                     ctx.fillText(letter, x[j], y[i]);
                 }

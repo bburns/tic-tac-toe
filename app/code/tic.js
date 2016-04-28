@@ -13,7 +13,8 @@ tic.O=-1;
 tic.stateStart = 0; // wait for user to choose x or o
 tic.stateUser = 1; // user's turn
 tic.stateCpu = 2; // computer's turn
-tic.stateDone = 3;
+tic.stateLastMove = 3; // show last move
+tic.stateEnd = 4; // show end dialog
 
 tic.statePlay = 9; // for playAgainstSelf()
 
@@ -31,12 +32,11 @@ tic.log = function(board, indent) {
         spaces += '  ';
         indent --;
     }
-var s='';    
-    // var s = board.map(row=>spaces+row.join('')).join('\n');
-    // s = s.replace(/-1/g,'O');
-    // s = s.replace(/1/g,'X');
-    // s = s.replace(/0/g,'_');
-    // s += '\n';
+    var s = board.map(row=>spaces+row.join('')).join('\n');
+    s = s.replace(/-1/g,'O');
+    s = s.replace(/1/g,'X');
+    s = s.replace(/0/g,'_');
+    s += '\n';
     s += spaces + 'score ' + tic.getScore(board);
     console.log(s);
 };
