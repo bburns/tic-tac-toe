@@ -23,16 +23,21 @@ tic.boardEmpty =
      [_,_,_],
      [_,_,_]];
 
-// * logboard
+// * log
 
-tic.logBoard = function(board) {
-    var s = board.map(row=>row.join('')).join('\n');
-    s = s.replace(/-1/g,'O');
-    s = s.replace(/1/g,'X');
-    s = s.replace(/0/g,'_');
-    s += '\n';
-    s += tic.getScore(board);
-    // s +='\n';
+tic.log = function(board, indent) {
+    var spaces = '';
+    while (indent > 0) {
+        spaces += '  ';
+        indent --;
+    }
+var s='';    
+    // var s = board.map(row=>spaces+row.join('')).join('\n');
+    // s = s.replace(/-1/g,'O');
+    // s = s.replace(/1/g,'X');
+    // s = s.replace(/0/g,'_');
+    // s += '\n';
+    s += spaces + 'score ' + tic.getScore(board);
     console.log(s);
 };
 
@@ -90,47 +95,62 @@ tic.getMoves = function(board) {
 // get best move for given board and player
 // this is the negamax algorithm
 tic.getMove = function(board, player, lookahead) {
+// tic.log(board, 3-lookahead);
     var moves = tic.getMoves(board);
-    var score = tic.getScore(board);
+    // var score = tic.getScore(board);
+    var score = tic.getScore(board) * player;
     if (lookahead==0 || score !==0 || moves.length==0) {
         var move = {i:null, j:null, score: score};
         return move;
     }
     var bestMove = {i:null, j:null, score:-9e9};
     for (var move of moves) {
-        board[move.i][move.j] = player;
+        board[move.i][move.j] = player; // place piece
+tic.log(board,3-lookahead);        
+// tic.log(board,lookahead);
         var nextMove = tic.getMove(board, -player, lookahead - 1);
-        nextMove.score = nextMove.score * player;
+        // nextMove.score = nextMove.score * player;
+        nextMove.score = - nextMove.score;
         if (nextMove.score==0) nextMove.score=0; // -0 -> 0, for chai assert
-        board[move.i][move.j] = 0;
+// nextMove.player=player;        
+// console.log('nextmove', nextMove);
+        board[move.i][move.j] = 0; // remove piece
         if (nextMove.score > bestMove.score) {
             move.score = nextMove.score;
             bestMove = move;
+// bestMove.player=player;            
         }
     }
+console.log('bestmove',bestMove);    
     return bestMove;
 };
 
 var X = tic.X, O = tic.O, _ = 0;
 
-// var board_oo =
+// var boardOO =
 //     [[X,O,_],
 //      [O,O,_],
 //      [X,X,_]];
-// console.log(tic.getMove(board_oo, O, 2));
+// console.log(tic.getMove(boardOO, O, 2));
 
-// var board_xx =
+// var boardXX =
 //     [[X,O,O],
 //      [_,X,X],
 //      [X,_,O]];
-// console.log(tic.getMove(board_xx, O, 3));
+// console.log(tic.getMove(boardXX, O, 3));
 
-var board_xx =
-    [[X,O,O],
-     [O,X,X],
-     [X,_,O]];
-console.log(tic.getMove(board_xx, O, 3));
+// var boardXX =
+//     [[X,O,O],
+//      [O,X,X],
+//      [X,_,O]];
+// console.log(tic.getMove(boardXX, O, 3));
 
+var board =
+    [[O,_,2],
+     [_,X,X],
+     [_,2,2]];
+console.log(tic.getMove(board, O, 3));
+// console.log(tic.getMove(board, O, 2));
 
 // * run
 
@@ -154,7 +174,7 @@ tic.playAgainstSelf = function() {
             gameState = tic.stateDone;
         player = -player;
     }
-    tic.logBoard(board);
+    tic.log(board);
 };
 
 
@@ -168,7 +188,7 @@ tic.playAgainstSelf = function() {
 //     }
 
 //     play() {
-//         this.board = tic.boardEmpty;
+//         this.board = tic.boardEmpty; //. need to clone arrays
 //         this.score = 0;
 //         this.gameState = tic.stateStart;
 //         // var playerUser = tic.X;
@@ -181,7 +201,7 @@ tic.playAgainstSelf = function() {
 //             function loop() {
 //                 if (this.gameState==tic.statePlay) {
 //                     if (this.player==playerUser) {
-//                         // logboard;
+//                         // log;
 //                         var move = this.askMove('move?');
 //                     } else {
 //                         var move = tic.getMove(this.board, this.player, tic.LOOKAHEAD);
@@ -196,7 +216,7 @@ tic.playAgainstSelf = function() {
 //                 }
 //             }
 //             loop();
-//             tic.logBoard(this.board);
+//             tic.log(this.board);
 //             tic.play(); // rerun/recurse
 //         });
 //     };

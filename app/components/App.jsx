@@ -13,9 +13,10 @@ export default class App extends React.Component {
         var state = {};
         state.playerUser = null;
         state.playerCpu = null;
-        // state.board = [[0,1,0],[0,-1,0],[1,0,0]];
         state.board = [[0,0,0],[0,0,0],[0,0,0]];
+        // state.board = [[-1,0,2],[0,1,0],[0,2,2]];
         state.lookahead = 3;
+        // state.lookahead = 2;
         state.showStart = true;
         state.showEnd = false;
         state.score = 0;
@@ -43,6 +44,7 @@ console.log(state);
         var player = (side=='X') ? tic.X : tic.O;
         var gameState = (side=='X') ? tic.stateUser : tic.stateCpu;
         var board = [[0,0,0],[0,0,0],[0,0,0]];
+        // var board = [[-1,0,2],[0,1,0],[0,2,2]];
         
         var state = this.state;
         state.playerUser = player;
@@ -63,7 +65,7 @@ console.log(state);
         console.log(move);
         var state = this.state;
         state.board[move.i][move.j] = this.state.playerCpu;
-        tic.logBoard(state.board);
+        tic.log(state.board);
         this.setState(state);
         this.forceUpdate();
         if (this.checkBoard()) {
@@ -74,12 +76,10 @@ console.log(state);
     
     onChooseSquare(i, j) {
         var state = this.state;
-            tic.logBoard(state.board);
-        
         if (state.board[i][j]===0) {
             state.board[i][j] = this.state.playerUser;
             this.setState(state);
-            // tic.logBoard(state.board);
+            tic.log(state.board);
             this.forceUpdate();
             if (this.checkBoard()) {
                 setTimeout(this.onCpuMove.bind(this), this.state.delayCpu);
@@ -242,7 +242,8 @@ class Board extends React.Component {
             for (var j=0; j<3; j++) {
                 const piece = board[i][j];
                 if (piece!==0) {
-                    const letter = (piece > 0) ? 'X' : 'O';
+                    // const letter = (piece > 0) ? 'X' : 'O';
+                    const letter = (piece==tic.X) ? 'X' : (piece==tic.O) ? 'O' : '-';
                     ctx.fillText(letter, x[j], y[i]);
                 }
             }
