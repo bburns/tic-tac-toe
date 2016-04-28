@@ -19,6 +19,8 @@ export default class App extends React.Component {
         state.showStart = true;
         state.showEnd = false;
         state.score = 0;
+        state.delayCpu = 500; // ms
+        state.delayEnd = 2000; // ms
         // state.showStart = false;
         // state.showEnd = true;
         // state.score = 1;
@@ -52,12 +54,11 @@ console.log(state);
         this.forceUpdate();
 // alert('forcedupdate');
         if (gameState==tic.stateCpu) {
-            this.onCpuMove();
+            setTimeout(this.onCpuMove.bind(this), this.state.delayCpu);
         }
     }
 
     onCpuMove() {
-        //. delay 0.5-1secs
         var move = tic.getMove(this.state.board, this.state.playerCpu, this.state.lookahead);
         console.log(move);
         var state = this.state;
@@ -78,7 +79,7 @@ console.log(state);
         tic.logBoard(state.board);
         this.forceUpdate();
         if (this.checkBoard()) {
-            this.onCpuMove();
+            setTimeout(this.onCpuMove.bind(this), this.state.delayCpu);
         } else {
             this.onDone();
         }            
@@ -109,7 +110,7 @@ console.log(state);
         state.endMessage = s;
         this.setState(state);
         // delay n secs and goto start
-        setTimeout(this.onStart.bind(this), 2000);
+        setTimeout(this.onStart.bind(this), this.state.delayEnd);
     }
     
     
@@ -140,7 +141,7 @@ console.log(state);
                 <Modal
             isOpen={this.state.showEnd}
                 >
-                <div>{this.state.endMessage}</div>
+                <div className='end-message'>{this.state.endMessage}</div>
                 </Modal>
                 
                 <Board
