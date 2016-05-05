@@ -1,11 +1,8 @@
 # Tic-tac-toe
 
-This is an implementation of tic-tac-toe using the [negamax](http://wikipedia.org/en/Negamax) algorithm, for the [freeCodeCamp](http://freecodecamp.org) front-end development certification. 
+This is an implementation of Tic-tac-toe using the [Negamax](http://wikipedia.org/en/Negamax) algorithm, for the [freeCodeCamp](http://freecodecamp.org) front-end development certificate. 
 
-## Install
-  * [Node.js](http://nodejs.org)
-  * [Brunch](http://brunch.io): `npm install -g brunch`
-  * Plugins and dependencies: `npm install`
+The project is described here - https://www.freecodecamp.com/challenges/build-a-tic-tac-toe-game.
 
-## Run
-  * `brunch build`
+
+
