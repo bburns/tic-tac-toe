@@ -14,7 +14,9 @@ export default class App extends React.Component {
         state.playerUser = null;
         state.playerCpu = null;
         state.board = [[0,0,0],[0,0,0],[0,0,0]];
-        state.lookahead = 3;
+        // state.board = [[-1,0,2],[0,1,0],[0,2,2]];
+        // state.lookahead = 3;
+        state.lookahead = 4;
         state.showStart = true;
         state.showEnd = false;
         state.score = 0;
@@ -42,6 +44,7 @@ export default class App extends React.Component {
         var player = (side=='X') ? tic.X : tic.O;
         var gameState = (side=='X') ? tic.stateUser : tic.stateCpu;
         var board = [[0,0,0],[0,0,0],[0,0,0]];
+        // var board = [[-1,0,2],[0,1,0],[0,2,2]];
         
         var state = this.state;
         state.playerUser = player;
@@ -57,7 +60,10 @@ export default class App extends React.Component {
     }
 
     onCpuMove() {
-        var move = tic.getMove(this.state.board, this.state.playerCpu, this.state.lookahead);
+        // var move = tic.getMove(this.state.board, this.state.playerCpu, this.state.lookahead);
+        var moveScore = tic.getMove(this.state.board, this.state.playerCpu, this.state.lookahead);
+        var move = moveScore[0];
+        // var score = moveScore[1];
         console.log(move);
         var state = this.state;
         state.board[move.i][move.j] = this.state.playerCpu;

@@ -4,7 +4,8 @@
 
 var tic = {};
 
-tic.LOOKAHEAD = 3;
+
+// * constants
 
 tic.X=1;
 tic.O=-1;
@@ -24,20 +25,29 @@ tic.boardEmpty =
      [_,_,_],
      [_,_,_]];
 
+
 // * log
 
-tic.log = function(board, indent) {
+tic.getSpaces = function(nspaces) {
     var spaces = '';
-    while (indent > 0) {
+    while (nspaces > 0) {
         spaces += '  ';
-        indent --;
+        nspaces --;
     }
+    return spaces;
+};
+
+
+tic.log = function(board, indent) {
+    var spaces = tic.getSpaces(indent);
     var s = board.map(row=>spaces+row.join('')).join('\n');
     s = s.replace(/-1/g,'O');
     s = s.replace(/1/g,'X');
     s = s.replace(/0/g,'_');
+    s = s.replace(/2/g,'-');
     s += '\n';
-    s += spaces + 'score ' + tic.getScore(board);
+    var score = spaces + 'score ' + tic.getScore(board) + '\n';
+    s = score + s;
     console.log(s);
 };
 
@@ -92,29 +102,42 @@ tic.getMoves = function(board) {
 
 // * getMove
 
-// get best move for given board and player
+// get best move and score for given board and player
+// returns [move, score], with move={i,j}
 // this is the negamax algorithm
+// https://en.wikipedia.org/wiki/Negamax
 tic.getMove = function(board, player, lookahead) {
+    
+    // check if we're at a terminal node - if so just return the score
     var moves = tic.getMoves(board);
-    var score = tic.getScore(board) * player;
+    var score = tic.getScore(board);
     if (lookahead==0 || score !==0 || moves.length==0) {
-        var move = {i:null, j:null, score: score};
-        return move;
+        return [null, score];
     }
-    var bestMove = {i:null, j:null, score:-9e9};
+    
+    // find the best move available for this player
+    var bestMove = null;
+    var bestScore = -Infinity;
     for (var move of moves) {
         board[move.i][move.j] = player; // place piece
-        var nextMove = tic.getMove(board, -player, lookahead - 1);
-        nextMove.score = - nextMove.score;
-        if (nextMove.score==0) nextMove.score=0; // -0 -> 0, for chai assert
+        var moveScore = tic.getMove(board, -player, lookahead - 1);
         board[move.i][move.j] = 0; // remove piece
-        if (nextMove.score > bestMove.score) {
-            move.score = nextMove.score;
+        score = moveScore[1];
+        score = score * player; // flip sign if needed
+// if (lookahead==3) console.log(score);
+if (lookahead==2) console.log(score);
+        if (score==0) score=0; // -0 -> 0, for chai assert
+        if (score > bestScore) {
+            bestScore = score;
             bestMove = move;
         }
     }
-    return bestMove;
+    bestScore = bestScore * player; // flip sign back again
+    return [bestMove, bestScore];
 };
+
+
+// * test
 
 // var X = tic.X, O = tic.O, _ = 0;
 
@@ -146,6 +169,10 @@ tic.getMove = function(board, player, lookahead) {
 // * run
 
 // play a game against itself
+
+// tic.LOOKAHEAD = 3;
+tic.LOOKAHEAD = 4;
+// tic.LOOKAHEAD = 5;
 
 tic.playAgainstSelf = function() {
     var board = tic.boardEmpty;
