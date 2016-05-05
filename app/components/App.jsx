@@ -5,17 +5,14 @@ import Modal from 'react-modal';
 import tic from '../code/tic';
 
 
-
 export default class App extends React.Component {
-    
+
     constructor() {
         super();
         var state = {};
         state.playerUser = null;
         state.playerCpu = null;
         state.board = [[0,0,0],[0,0,0],[0,0,0]];
-        // state.board = [[-1,0,2],[0,1,0],[0,2,2]];
-        // state.lookahead = 3;
         state.lookahead = 4;
         state.showStart = true;
         state.showEnd = false;
@@ -23,13 +20,10 @@ export default class App extends React.Component {
         state.delayCpu = 250; // ms
         state.delayLastMove = 1000; // ms
         state.delayEnd = 2000; // ms
-        // state.showStart = false;
-        // state.showEnd = true;
-        // state.score = 1;
         state.gameState = tic.stateStart;
         this.state = state;
     }
-    
+
     onStart() {
         var state = {};
         state.showStart = true;
@@ -37,15 +31,14 @@ export default class App extends React.Component {
         state.gameState = tic.stateStart;
         this.setState(state);
     }
-    
+
     onChooseSide(evt) {
         console.log(evt.target.innerHTML);
         var side = evt.target.innerHTML;
         var player = (side=='X') ? tic.X : tic.O;
         var gameState = (side=='X') ? tic.stateUser : tic.stateCpu;
         var board = [[0,0,0],[0,0,0],[0,0,0]];
-        // var board = [[-1,0,2],[0,1,0],[0,2,2]];
-        
+
         var state = this.state;
         state.playerUser = player;
         state.playerCpu = - player;
@@ -60,10 +53,8 @@ export default class App extends React.Component {
     }
 
     onCpuMove() {
-        // var move = tic.getMove(this.state.board, this.state.playerCpu, this.state.lookahead);
         var moveScore = tic.getMove(this.state.board, this.state.playerCpu, this.state.lookahead);
         var move = moveScore[0];
-        // var score = moveScore[1];
         console.log(move);
         var state = this.state;
         state.board[move.i][move.j] = this.state.playerCpu;
@@ -72,11 +63,10 @@ export default class App extends React.Component {
         this.forceUpdate();
         if (this.checkBoard()) {
         } else {
-            // this.onDone();
             this.onLastMove();
         }
     }
-    
+
     onChooseSquare(i, j) {
         var state = this.state;
         if (state.board[i][j]===0) {
@@ -89,10 +79,10 @@ export default class App extends React.Component {
             } else {
                 // this.onDone();
                 this.onLastMove();
-            }            
+            }
         }
     }
-    
+
     checkBoard() {
         var moves = tic.getMoves(this.state.board);
         var score = tic.getScore(this.state.board);
@@ -102,7 +92,7 @@ export default class App extends React.Component {
         this.setState(state);
         return cont;
     }
-    
+
     onLastMove() {
         //. show line through win
         var state = this.state;
@@ -111,7 +101,7 @@ export default class App extends React.Component {
         // delay n secs and goto end
         setTimeout(this.onEnd.bind(this), this.state.delayLastMove);
     }
-    
+
     onEnd() {
         var state = this.state;
         state.gameState = tic.stateEnd;
@@ -128,16 +118,16 @@ export default class App extends React.Component {
         // delay n secs and goto start
         setTimeout(this.onStart.bind(this), this.state.delayEnd);
     }
-    
-    
+
+
     render() {
-        
+
         var modalStyles = {
         };
-        
+
         return (
                 <div id="content">
-                
+
                 <Modal
             isOpen={this.state.showStart}
             style={modalStyles}
@@ -153,18 +143,18 @@ export default class App extends React.Component {
                 <div>(X goes first)</div><br />
                 </div>
                 </Modal>
-                
+
                 <Modal
             isOpen={this.state.showEnd}
                 >
                 <div className='end-message'>{this.state.endMessage}</div>
                 </Modal>
-                
+
                 <Board
             board={this.state.board}
             onChooseSquare={this.onChooseSquare.bind(this)}
                 />
-                
+
                 </div>
         );
     }
@@ -208,9 +198,9 @@ class Board extends React.Component {
         const sixth = third/2;
 
         const canvas = this.refs.canvas;
-        
+
         if (!canvas) return;
-        
+
         canvas.width = wh;
         canvas.height = wh;
 
@@ -242,11 +232,6 @@ class Board extends React.Component {
         ctx.font = fontSize + "px serif";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-
-        // draw X's and O's
-        // ctx.fillText("X",x[0], y[0]);
-        // ctx.fillText("X",x[1], y[0]);
-        // ctx.fillText("O",x[1], y[2]);
 
         // draw board state
         const board = this.props.board;
